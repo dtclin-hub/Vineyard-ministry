@@ -1,38 +1,44 @@
 ---
+import site from '../data/site.json';
+
 const steps = [
   {
-    number: '01',
-    title: 'Tell us what matters',
-    copy: 'Share what brought you in, what makes visits difficult, and how much detail you want.',
+    number: '一',
+    title: '輕鬆前來',
+    copy: '不需要任何準備，也不需要先認識任何人。穿著舒適、帶著好奇的心來就可以。',
   },
   {
-    number: '02',
-    title: 'Set your pace',
-    copy: 'Choose a pause signal. Ask for quiet, explanations, or breaks—your preferences lead.',
+    number: '二',
+    title: '一同敬拜',
+    copy: '以詩歌讚美神、一同禱告，聆聽以聖經為本的講道信息。',
   },
   {
-    number: '03',
-    title: 'See what we see',
-    copy: 'We review findings together using plain language and only the images that help.',
+    number: '三',
+    title: '彼此認識',
+    copy: '聚會後歡迎留下來，與弟兄姊妹聊聊，我們很樂意認識你。',
   },
   {
-    number: '04',
-    title: 'Leave with a plan',
-    copy: 'You get written priorities and next steps. Nothing moves ahead without your say-so.',
+    number: '四',
+    title: '繼續同行',
+    copy: '若你想更認識信仰，我們願意陪你一起讀聖經、回答你的問題。',
   },
 ];
 ---
 
-<section class="first-visit section-shell" id="first-visit" aria-labelledby="first-visit-title">
+<section class="first-visit section-shell" id="visit" aria-labelledby="first-visit-title">
   <div class="first-visit-heading">
     <div>
-      <p class="eyebrow">Your first visit</p>
-      <h2 id="first-visit-title">No guessing.<br />Here’s what happens.</h2>
+      <p class="eyebrow">第一次來訪</p>
+      <h2 id="first-visit-title">我們等候你，<br />歡迎回家。</h2>
     </div>
-    <p>
-      It is okay to feel nervous. We build time into a first appointment to
-      listen, answer questions, and agree on a pace before any exam begins.
-    </p>
+    <div class="gathering-card">
+      <p class="footer-label">聚會時間</p>
+      <dl>
+        {site.gatherings.map((item) => (
+          <div><dt>{item.name}</dt><dd>{item.time}</dd></div>
+        ))}
+      </dl>
+    </div>
   </div>
   <ol class="steps-list">
     {steps.map((step) => (

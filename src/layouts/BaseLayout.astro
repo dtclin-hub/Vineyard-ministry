@@ -1,60 +1,73 @@
 ---
+import { Image } from 'astro:assets';
 import SiteHeader from '../components/SiteHeader.astro';
 import site from '../data/site.json';
+import logo from '../assets/images/logo.png';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
-  image?: string;
   schema?: Record<string, unknown>;
 }
 
 const {
-  title = `${site.name} | A calmer neighborhood dentist`,
+  title = `${site.nameEn} | ${site.name}`,
   description = site.description,
-  image,
   schema,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, site.websiteUrl);
-const localBusinessSchema = {
+const ogImage = new URL(logo.src, site.websiteUrl);
+const hasAddress = Boolean(site.address.street);
+const hasContact = Boolean(site.phoneDisplay || site.email);
+
+const churchSchema: Record<string, unknown> = {
   '@context': 'https://schema.org',
-  '@type': 'Dentist',
+  '@type': 'Church',
   name: site.name,
+  alternateName: site.nameEn,
   description: site.description,
-  telephone: site.phoneDisplay,
-  email: site.email,
   url: site.websiteUrl,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: site.address.street,
-    addressLocality: site.address.locality,
-    addressRegion: site.address.region,
-    postalCode: site.address.postalCode,
-    addressCountry: 'US',
-  },
-  areaServed: ['Maplewood', 'Richmond', 'Hosford-Abernethy', 'Portland'],
+  logo: ogImage.href,
+  ...(site.phoneDisplay && { telephone: site.phoneDisplay }),
+  ...(site.email && { email: site.email }),
+  ...(hasAddress && {
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: site.address.street,
+      addressLocality: site.address.locality,
+      addressRegion: site.address.region,
+      postalCode: site.address.postalCode,
+    },
+  }),
 };
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant-TW">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#315f4c" />
+    <meta name="theme-color" content="#4b2465" />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"
+    />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    {image && <meta property="og:image" content={image} />}
+    <meta property="og:image" content={ogImage} />
     <title>{title}</title>
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(churchSchema)} />
     {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body>
@@ -64,31 +77,42 @@ const localBusinessSchema = {
     </main>
     <footer class="site-footer">
       <div class="footer-brand">
-        <span class="brand-mark brand-mark--light" aria-hidden="true"><span></span></span>
+        <Image src={logo} alt="" width={144} height={144} class="footer-logo" />
         <div>
           <strong>{site.name}</strong>
-          <p>{site.socialProof}</p>
+          <span class="footer-en">{site.nameEn}</span>
+          <p>{site.tagline}</p>
         </div>
       </div>
       <div>
-        <p class="footer-label">Visit</p>
-        <address>
-          {site.address.street}<br />
-          {site.address.locality}, {site.address.region} {site.address.postalCode}
-        </address>
+        <p class="footer-label">聚會時間</p>
+        {site.gatherings.map((item) => <p>{item.name}<br />{item.time}</p>)}
       </div>
       <div>
-        <p class="footer-label">Contact</p>
-        <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a><br />
-        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <p class="footer-label">聚會地點</p>
+        {hasAddress ? (
+          <address>
+            {site.address.street}<br />
+            {site.address.locality} {site.address.region} {site.address.postalCode}
+          </address>
+        ) : (
+          <p>地點即將公布</p>
+        )}
       </div>
       <div>
-        <p class="footer-label">Hours</p>
-        {site.hours.map((item) => <p>{item.days}<br />{item.time}</p>)}
+        <p class="footer-label">聯絡我們</p>
+        {hasContact ? (
+          <>
+            {site.phoneDisplay && <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a>}
+            {site.phoneDisplay && site.email && <br />}
+            {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+          </>
+        ) : (
+          <p>聯絡方式即將公布</p>
+        )}
       </div>
       <p class="footer-note">
-        © {new Date().getFullYear()} {site.name}. Website content is general information,
-        not medical advice.
+        © {new Date().getFullYear()} {site.nameEn} · {site.name}
       </p>
     </footer>
   </body>

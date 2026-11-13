@@ -9,25 +9,28 @@ interface Props {
 
 const {
   compact = false,
-  title = 'Ready when you are. Start with a conversation.',
+  title = '歡迎你來，與我們一同敬拜。',
 } = Astro.props;
 ---
 
 <section class:list={['booking-panel', { 'booking-panel--compact': compact }]} aria-labelledby="booking-title">
   <div>
-    <p class="eyebrow">Your next step</p>
+    <p class="eyebrow">誠摯邀請</p>
     <h2 id="booking-title">{title}</h2>
     <p>
-      Our booking link sends a request—it does not confirm an appointment.
-      Prefer to talk? Call and a real person will help.
+      無論你是第一次接觸信仰，或是正在尋找屬靈的家，我們都誠心歡迎你。
+      「勞苦擔重擔的人可以到我這裡來，我就使你們得安息。」（馬太福音 11:28）
     </p>
   </div>
   <div class="booking-actions">
-    <a class="button button--light" href={site.bookingUrl}>
-      Request an appointment <ArrowIcon />
+    <a class="button button--light" href="/#visit">
+      聚會資訊 <ArrowIcon />
     </a>
-    <a class="phone-link" href={`tel:${site.phoneHref}`}>
-      Call {site.phoneDisplay}
-    </a>
+    {site.email && (
+      <a class="phone-link" href={`mailto:${site.email}`}>寫信給我們</a>
+    )}
+    {site.phoneDisplay && (
+      <a class="phone-link" href={`tel:${site.phoneHref}`}>來電 {site.phoneDisplay}</a>
+    )}
   </div>
 </section>

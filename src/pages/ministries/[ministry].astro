@@ -1,0 +1,72 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FaqList from '../../components/FaqList.astro';
+import BookingPanel from '../../components/BookingPanel.astro';
+import site from '../../data/site.json';
+
+export async function getStaticPaths() {
+  const ministries = await getCollection('ministries');
+  return ministries.map((ministry) => ({
+    params: { ministry: ministry.id },
+    props: { ministry },
+  }));
+}
+
+const { ministry } = Astro.props;
+const { Content } = await render(ministry);
+
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: ministry.data.faqs.map((item: { question: string; answer: string }) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
+---
+
+<BaseLayout
+  title={`${ministry.data.title} | ${site.name}`}
+  description={ministry.data.seoDescription}
+  schema={pageSchema}
+>
+  <section class="service-hero section-shell">
+    <div class="service-hero-copy">
+      <p class="eyebrow">{ministry.data.eyebrow}</p>
+      <h1>{ministry.data.title}</h1>
+      <p class="hero-lede">{ministry.data.description}</p>
+      <div class="service-meta">
+        <div><span>聚會時間</span><strong>{ministry.data.when}</strong></div>
+        <div><span>適合對象</span><strong>{ministry.data.forWhom}</strong></div>
+      </div>
+      <a class="button" href="/#visit">聚會資訊</a>
+    </div>
+    <div class="service-hero-image">
+      <div class="verse-arch">
+        <span class="verse-glyph" aria-hidden="true">{ministry.data.glyph}</span>
+        <blockquote>
+          <p>{ministry.data.verse}</p>
+          <cite>{ministry.data.verseRef}</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="service-body section-shell">
+    <article class="prose">
+      <Content />
+    </article>
+    <aside class="service-contact">
+      <p class="eyebrow">還有疑問嗎？</p>
+      <h2>歡迎與我們聊聊。</h2>
+      <p>聚會後歡迎找牧者或同工談談，我們很樂意回答你對信仰或聚會的任何問題。</p>
+      {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+      {site.phoneDisplay && <a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a>}
+    </aside>
+  </section>
+
+  <div class="section-shell"><FaqList items={ministry.data.faqs} title={`關於${ministry.data.shortTitle}`} /></div>
+  <div class="section-shell"><BookingPanel compact title="願神的話語成為你腳前的燈。" /></div>
+</BaseLayout>

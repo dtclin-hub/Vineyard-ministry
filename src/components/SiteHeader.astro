@@ -1,28 +1,31 @@
 ---
+import { Image } from 'astro:assets';
 import site from '../data/site.json';
+import logo from '../assets/images/logo.png';
 
 const currentPath = Astro.url.pathname;
 const navItems = [
-  { href: '/#care', label: 'Our care' },
-  { href: '/#first-visit', label: 'First visit' },
-  { href: '/#practice', label: 'The practice' },
+  { href: '/#beliefs', label: '我們的信仰' },
+  { href: '/#ministries', label: '事工' },
+  { href: '/songs/', label: '原創詩歌' },
+  { href: '/#visit', label: '第一次來訪' },
+  { href: '/#faq', label: '常見問題' },
 ];
+const firstGathering = site.gatherings[0];
 ---
 
 <header class="site-header">
-  <a class="skip-link" href="#main-content">Skip to content</a>
+  <a class="skip-link" href="#main-content">跳到主要內容</a>
   <div class="header-inner">
-    <a class="brand" href="/" aria-label={`${site.name} home`}>
-      <span class="brand-mark" aria-hidden="true">
-        <span></span>
-      </span>
+    <a class="brand" href="/" aria-label={`${site.name} 首頁`}>
+      <Image src={logo} alt="" width={112} height={112} class="brand-logo" loading="eager" />
       <span>
-        <strong>{site.shortName}</strong>
-        <small>Family Dental</small>
+        <strong>{site.name}</strong>
+        <small>{site.nameEn}</small>
       </span>
     </a>
 
-    <nav aria-label="Primary navigation">
+    <nav aria-label="主要導覽">
       <ul>
         {navItems.map((item) => (
           <li><a href={item.href}>{item.label}</a></li>
@@ -30,15 +33,17 @@ const navItems = [
       </ul>
     </nav>
 
-    <a class="header-call" href={`tel:${site.phoneHref}`}>
-      <span>Call the practice</span>
-      <strong>{site.phoneDisplay}</strong>
-    </a>
+    {firstGathering && (
+      <a class="header-call" href="/#visit">
+        <span>{firstGathering.name}</span>
+        <strong>{firstGathering.time}</strong>
+      </a>
+    )}
   </div>
-  {currentPath.startsWith('/services/') && (
+  {currentPath.startsWith('/ministries/') && (
     <div class="service-ribbon">
-      <a href="/#care">← All services</a>
-      <span>Maplewood · Portland, Oregon</span>
+      <a href="/#ministries">← 所有事工</a>
+      <span>{site.nameEn}</span>
     </div>
   )}
 </header>

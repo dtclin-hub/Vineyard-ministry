@@ -5,37 +5,54 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import FirstVisitSteps from '../components/FirstVisitSteps.astro';
 import FaqList from '../components/FaqList.astro';
 import BookingPanel from '../components/BookingPanel.astro';
+import SongPlayer from '../components/SongPlayer.astro';
+import SongGrid from '../components/SongGrid.astro';
 import ArrowIcon from '../icons/ArrowIcon.astro';
 import site from '../data/site.json';
-import heroImage from '../assets/images/hero-dentist.jpg';
-import familyImage from '../assets/images/family-dentistry.jpg';
-import restorativeImage from '../assets/images/restorative-care.jpg';
-import urgentImage from '../assets/images/urgent-visit.jpg';
-import teamImage from '../assets/images/practice-team.jpg';
+import songData from '../data/songs.json';
+import logo from '../assets/images/logo.png';
 
-const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
-const serviceImages = {
-  'family-dentistry': familyImage,
-  'gentle-restorative-care': restorativeImage,
-  'emergency-dentist': urgentImage,
-};
+const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
+
+const beliefs = [
+  {
+    title: '聖經真理',
+    copy: '我們相信聖經是神所默示的話語，是信仰與生活最高的準則，也是教會一切事工的根基。',
+    ref: '提摩太後書 3:16',
+  },
+  {
+    title: '十字架的救恩',
+    copy: '耶穌基督為我們的罪死在十字架上，第三天復活。救恩是神白白的恩典，不是靠行為賺取。',
+    ref: '以弗所書 2:8',
+  },
+  {
+    title: '回轉歸向神',
+    copy: '神呼召每一個人悔改，離開罪惡、轉向祂。凡接待祂、信祂名的人，就有權柄作神的兒女。',
+    ref: '約翰福音 1:12',
+  },
+  {
+    title: '基督裡的新生命',
+    copy: '若有人在基督裡，他就是新造的人。我們盼望與你一同在主裡扎根成長、結出果子。',
+    ref: '哥林多後書 5:17',
+  },
+];
 
 const faqs = [
   {
-    question: 'Do I need to know what treatment I need before booking?',
-    answer: 'No. Tell us what you are noticing or what you hope to change. The first visit is for understanding your needs and deciding on next steps together.',
+    question: '我不是基督徒，可以參加聚會嗎？',
+    answer: '非常歡迎！我們的聚會對所有人開放，無論你對信仰了解多少，都可以來看看、聽聽。',
   },
   {
-    question: 'Can I ask for extra time or breaks?',
-    answer: 'Yes. Let the team know when you book, and we will note your preferences. You can also use an agreed pause signal at any point during a visit.',
+    question: '第一次來需要準備什麼？',
+    answer: '不需要特別準備。穿著舒適即可；如果有聖經可以帶來，沒有的話現場也可以借用。',
   },
   {
-    question: 'Does the online request confirm my appointment?',
-    answer: 'No. It sends your preferred times to the team. We will contact you to confirm availability and appointment details.',
+    question: '葡萄園事工教會屬於哪個宗派？',
+    answer: '我們以聖經真理為根基，傳講耶穌基督十字架的救恩。若想進一步了解教會的信仰立場，歡迎在聚會後與牧者聊聊。',
   },
   {
-    question: 'Do you offer an online insurance checker?',
-    answer: 'No. Coverage varies by plan and treatment. Call the practice and we can help you understand what information to ask your insurer for before care.',
+    question: '我想更認識耶穌，可以怎麼開始？',
+    answer: '你可以從參加主日崇拜或查經聚會開始，也可以直接與我們聯絡，我們很樂意陪你一起讀聖經。',
   },
 ];
 
@@ -53,54 +70,73 @@ const faqSchema = {
 <BaseLayout schema={faqSchema}>
   <section class="hero section-shell">
     <div class="hero-copy">
-      <p class="eyebrow">Neighborhood dentistry · Maplewood, Portland</p>
-      <h1>Care that meets you at the door.</h1>
-      <p class="hero-lede">
-        Thoughtful family dentistry with time to ask questions, take a breath,
-        and understand every next step.
-      </p>
+      <p class="eyebrow eyebrow--en">{site.nameEn}</p>
+      <h1 class="hero-title"><span>在基督裡，</span><span>得著新的生命。</span></h1>
+      <p class="hero-lede">{site.description}</p>
       <div class="hero-actions">
-        <a class="button" href={site.bookingUrl}>Request a visit <ArrowIcon /></a>
-        <a class="text-link" href={`tel:${site.phoneHref}`}>Or call {site.phoneDisplay}</a>
-      </div>
-      <div class="hero-note">
-        <span class="note-number">12</span>
-        <span>years caring for<br />Portland neighbors</span>
+        <a class="button" href="#visit">聚會資訊 <ArrowIcon /></a>
+        <a class="text-link" href="#beliefs">認識我們的信仰</a>
       </div>
     </div>
     <div class="hero-visual">
       <div class="arch-image">
-        <Image src={heroImage} alt="Dentist listening to a patient in a calm treatment room" loading="eager" />
+        <Image src={logo} alt={`${site.name}標誌：十字架與葡萄枝`} width={600} height={600} loading="eager" />
       </div>
-      <div class="paper-note">
+      <figure class="paper-note">
         <span aria-hidden="true">✦</span>
-        <p><strong>Nervous about visiting?</strong><br />Tell us. We will plan around you.</p>
-      </div>
+        <blockquote>
+          <p>我是葡萄樹，你們是枝子。常在我裡面的，我也常在他裡面，這人就多結果子。</p>
+          <cite>約翰福音 15:5</cite>
+        </blockquote>
+      </figure>
     </div>
   </section>
 
-  <section class="care-section section-shell" id="care" aria-labelledby="care-title">
+  <section class="beliefs-section section-shell" id="beliefs" aria-labelledby="beliefs-title">
     <div class="section-intro section-intro--split">
       <div>
-        <p class="eyebrow">How we can help</p>
-        <h2 id="care-title">The care you need.<br />None of the pressure.</h2>
+        <p class="eyebrow">我們的信仰</p>
+        <h2 id="beliefs-title">以聖經為根基，<br />以基督為中心。</h2>
       </div>
       <p>
-        Clear recommendations, useful context, and room to decide. Every service
-        starts with listening—not assumptions.
+        葡萄園事工教會盼望忠心傳講神的話語，高舉耶穌基督的十字架，
+        使人認識福音、回轉歸向神，並在主裡同被建造。
+      </p>
+    </div>
+    <ol class="belief-grid">
+      {beliefs.map((item, index) => (
+        <li>
+          <span class="belief-index">0{index + 1}</span>
+          <h3>{item.title}</h3>
+          <p>{item.copy}</p>
+          <span class="belief-ref">{item.ref}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="care-section section-shell" id="ministries" aria-labelledby="ministries-title">
+    <div class="section-intro section-intro--split">
+      <div>
+        <p class="eyebrow">教會事工</p>
+        <h2 id="ministries-title">常在主裡，<br />一同結果子。</h2>
+      </div>
+      <p>
+        透過敬拜、查經禱告與福音關懷，我們一同在真理上成長，
+        也把基督的愛帶給身邊的人。
       </p>
     </div>
     <div class="service-list">
-      {services.map((service, index) => (
+      {ministries.map((ministry, index) => (
         <article class="service-row">
-          <a href={`/services/${service.id}/`} aria-label={`Learn about ${service.data.shortTitle}`}>
+          <a href={`/ministries/${ministry.id}/`} aria-label={`了解${ministry.data.shortTitle}`}>
             <span class="service-index">0{index + 1}</span>
-            <div class="service-thumb">
-              <Image src={serviceImages[service.id as keyof typeof serviceImages]} alt={service.data.imageAlt} />
+            <div class="service-thumb" aria-hidden="true">
+              <span>{ministry.data.glyph}</span>
             </div>
             <div class="service-copy">
-              <h3>{service.data.shortTitle}</h3>
-              <p>{service.data.summary}</p>
+              <h3>{ministry.data.shortTitle}</h3>
+              <p>{ministry.data.summary}</p>
             </div>
             <span class="round-arrow"><ArrowIcon /></span>
           </a>
@@ -109,32 +145,26 @@ const faqSchema = {
     </div>
   </section>
 
-  <FirstVisitSteps />
-
-  <section class="practice-story section-shell" id="practice" aria-labelledby="practice-title">
-    <div class="story-image">
-      <Image src={teamImage} alt="Two dental team members smiling in the practice" />
-      <span class="story-stamp">Here to<br />listen</span>
-    </div>
-    <div class="story-copy">
-      <p class="eyebrow">Meet Porchlight</p>
-      <h2 id="practice-title">A small practice with a long memory.</h2>
-      <p class="story-lede">
-        We remember that you prefer the window chair, that your kid wants to
-        know what every tool does, and that a little warning goes a long way.
-      </p>
+  <section class="songs-section section-shell" id="songs" aria-labelledby="songs-title">
+    <div class="section-intro section-intro--split">
+      <div>
+        <p class="eyebrow">葡萄園原創詩歌集</p>
+        <h2 id="songs-title">用詩歌，<br />向神獻上讚美。</h2>
+      </div>
       <p>
-        Porchlight is an independent Maplewood practice for adults and children
-        age six and up. We keep the team small, appointments unhurried, and
-        recommendations grounded in what matters to you.
+        「當用詩章、頌詞、靈歌彼此對說，口唱心和地讚美主。」（以弗所書 5:19）
+        這些是葡萄園事工教會創作的福音詩歌，願它們陪伴你敬拜、禱告與默想。
       </p>
-      <dl class="story-facts">
-        <div><dt>6+</dt><dd>Children<br />welcome</dd></div>
-        <div><dt>1</dt><dd>Consistent<br />care team</dd></div>
-        <div><dt>0</dt><dd>Pressure to<br />decide today</dd></div>
-      </dl>
+    </div>
+    <SongPlayer />
+    <SongGrid limit={6} />
+    <div class="songs-more">
+      <a class="button" href="/songs/">全部 {songData.songs.length} 首原創詩歌 <ArrowIcon /></a>
+      <a class="text-link" href={songData.channelUrl} target="_blank" rel="noopener">訂閱 YouTube 頻道 ↗</a>
     </div>
   </section>
+
+  <FirstVisitSteps />
 
   <div class="section-shell"><FaqList items={faqs} /></div>
   <div class="section-shell"><BookingPanel /></div>

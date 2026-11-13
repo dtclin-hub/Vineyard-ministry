@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SongPlayer from '../../components/SongPlayer.astro';
+import SongGrid from '../../components/SongGrid.astro';
+import site from '../../data/site.json';
+import songData from '../../data/songs.json';
+
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicPlaylist',
+  name: '葡萄園原創詩歌集 Vineyard Original Worship Collection',
+  numTracks: songData.songs.length,
+  track: songData.songs.map((song) => ({
+    '@type': 'MusicRecording',
+    name: song.titleEn ? `${song.title} ${song.titleEn}` : song.title,
+    url: `https://www.youtube.com/watch?v=${song.id}`,
+    byArtist: { '@type': 'MusicGroup', name: site.name },
+  })),
+};
+---
+
+<BaseLayout
+  title={`原創詩歌 | ${site.name}`}
+  description={`葡萄園事工教會創作的 ${songData.songs.length} 首原創福音詩歌，可線上觀看與收聽。`}
+  schema={pageSchema}
+>
+  <section class="songs-page section-shell">
+    <div class="section-intro section-intro--split">
+      <div>
+        <p class="eyebrow eyebrow--en">Vineyard Original Worship Collection</p>
+        <h1>葡萄園原創詩歌</h1>
+      </div>
+      <p>
+        共 {songData.songs.length} 首原創福音詩歌。點選任一首即可在本頁播放；
+        也可以到 YouTube 頻道收看、訂閱，第一時間收到新的詩歌。
+        <br />
+        <a class="text-link" href={songData.channelUrl} target="_blank" rel="noopener">前往 YouTube 頻道 ↗</a>
+      </p>
+    </div>
+    <SongPlayer />
+    <SongGrid />
+  </section>
+</BaseLayout>

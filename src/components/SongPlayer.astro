@@ -1,0 +1,33 @@
+---
+import songData from '../data/songs.json';
+
+interface Props {
+  songId?: string;
+}
+
+const { songId = songData.songs[0]?.id } = Astro.props;
+const song = songData.songs.find((item) => item.id === songId) ?? songData.songs[0];
+---
+
+{song && (
+  <div class="song-player" data-song-player>
+    <div class="song-player-frame">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${song.id}?rel=0`}
+        title={`《${song.title}》葡萄園原創詩歌`}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        data-song-frame
+      ></iframe>
+    </div>
+    <div class="song-player-caption">
+      <span class="eyebrow">正在播放</span>
+      <strong data-song-title>《{song.title}》</strong>
+      <a href={`https://www.youtube.com/watch?v=${song.id}`} target="_blank" rel="noopener" data-song-link>
+        在 YouTube 觀看 ↗
+      </a>
+    </div>
+  </div>
+)}
