@@ -39,6 +39,7 @@ const churchSchema: Record<string, unknown> = {
       addressLocality: site.address.locality,
       addressRegion: site.address.region,
       postalCode: site.address.postalCode,
+      addressCountry: site.address.countryCode,
     },
   }),
 };
@@ -89,11 +90,12 @@ const churchSchema: Record<string, unknown> = {
         {site.gatherings.map((item) => <p>{item.name}<br />{item.time}</p>)}
       </div>
       <div>
-        <p class="footer-label">聚會地點</p>
+        <p class="footer-label">通訊地址</p>
         {hasAddress ? (
           <address>
             {site.address.street}<br />
-            {site.address.locality} {site.address.region} {site.address.postalCode}
+            {site.address.locality} {site.address.region} {site.address.postalCode}<br />
+            {site.address.country}
           </address>
         ) : (
           <p>地點即將公布</p>

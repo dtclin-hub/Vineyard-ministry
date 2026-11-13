@@ -2,15 +2,17 @@
   "name": "葡萄園事工教會",
   "nameEn": "Vineyard Ministry Church",
   "description": "我們盼望以聖經真理為根基，傳揚耶穌基督並祂十字架的救恩，呼召人回轉歸向神，在基督裡得著新的生命。",
-  "websiteUrl": "https://vineyard-ministry.example",
+  "websiteUrl": "https://vineyardministrychurch.org",
   "phoneDisplay": "",
   "phoneHref": "",
-  "email": "",
+  "email": "admin@vineyardministrychurch.org",
   "address": {
-    "street": "",
-    "locality": "",
-    "region": "",
-    "postalCode": ""
+    "street": "PO Box 38",
+    "locality": "Sunnybank",
+    "region": "QLD",
+    "postalCode": "4109",
+    "country": "Australia",
+    "countryCode": "AU"
   },
   "gatherings": [
     { "name": "主日崇拜", "time": "時間待公布" },

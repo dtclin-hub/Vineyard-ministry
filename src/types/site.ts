@@ -11,6 +11,8 @@ export interface SiteConfig {
     locality: string;
     region: string;
     postalCode: string;
+    country: string;
+    countryCode: string;
   };
   gatherings: Array<{ name: string; time: string }>;
   tagline: string;

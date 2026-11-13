@@ -1459,3 +1459,20 @@ details[open] .faq-toggle::after {
     font-size: clamp(1.8rem, 10vw, 3.2rem);
   }
 }
+
+/* 頁尾：窄螢幕不撐破版面，長 Email 可換行 */
+.site-footer a {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+  .site-footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .site-footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
